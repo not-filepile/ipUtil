@@ -6,7 +6,7 @@ To run this program, you need the following:
 - `nmap`
 - `masscan`
 - `ipinfo` API key
-1. Obtain your API key from [ipinfo.io](https://ipinfo.io/).
+1. Create your API key from [ipinfo.io](https://ipinfo.io/).
 2. Set the API key as an environment variable:
    - **Linux/macOS**:
      ```sh
