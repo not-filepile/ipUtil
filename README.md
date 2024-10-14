@@ -34,9 +34,9 @@ When using the `-n` option, the program will run `nmap` with the following optio
 
 ### Example
 ```sh
-iputil 192.168.1.1 -n --top-ports 3000 -A
+iputil 192.168.1.1 -n --top-ports 3000
 ```
 
-This command will run `nmap` on the IP address `192.168.1.1` with `--top-ports 3000 -A`.
+This command will run `nmap` on the IP address `192.168.1.1` with `--top-ports 3000`.
 
 ---
