@@ -1,4 +1,4 @@
-# iputil
+# ipUtil
 Get information about IP addresses
 
 ## Requirements
