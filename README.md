@@ -23,7 +23,7 @@ iputil <ip address> [options]
 
 ### Options
 - `-n`: Use `nmap` for scanning.
-- `-m`: Use `masscan` for scanning.
+- `-m`: Use `mcstatus` for mc server.
 - `-s`: Use `internetdb` (default option).
 
 When using the `-n` option, the program will run `nmap` with the following options:
@@ -35,6 +35,7 @@ When using the `-n` option, the program will run `nmap` with the following optio
 ### Example
 ```sh
 iputil 192.168.1.1 -n --top-ports 3000
+iputil 192.168.1.1 -m
 ```
 
 This command will run `nmap` on the IP address `192.168.1.1` with `--top-ports 3000`.
