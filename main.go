@@ -1,13 +1,14 @@
 package main
 
 import (
+	"encoding/json"
 	"encoding/xml"
 	"fmt"
+	"github.com/fatih/color"
+	"net/http"
 	"os"
 	"os/exec"
 	"strings"
-
-	"github.com/fatih/color"
 )
 
 var (
@@ -36,10 +37,12 @@ func main() {
 	switch option {
 	case "-n":
 		runNmap(ipAddress, os.Args[3:])
-	case "-m":
+	case "-ma":
 		runMasscan(ipAddress)
 	case "-s", "":
 		runInternetDB(ipAddress)
+	case "-m":
+		runMc(ipAddress)
 	default:
 		warningColor.Println("Invalid option. Using default option (-s for internetdb).")
 		runInternetDB(ipAddress)
@@ -109,6 +112,49 @@ func runNmap(ipAddress string, args []string) {
 	}
 }
 
+func runMc(ipAddress string) {
+	//call api https://api.mcstatus.io/v2/status/java/<address>
+	titleColor.Println("Running mc...")
+	url := "https://api.mcstatus.io/v2/status/java/" + ipAddress
+	//call api with http.Get
+	resp, err := http.Get(url)
+
+	if err != nil {
+		errorColor.Printf("mc command failed: %s\n", err)
+		return
+	}
+
+	defer resp.Body.Close()
+
+	//parse the response
+	var result map[string]interface{}
+	err = json.NewDecoder(resp.Body).Decode(&result)
+	if err != nil {
+		errorColor.Printf("Failed to parse mc output: %s\n", err)
+		return
+	}
+
+	//print the result
+	verson, ok := result["version"].(map[string]interface{})
+	if !ok {
+		errorColor.Println("Failed to parse version information")
+		return
+	}
+	printKeyValue("Version", fmt.Sprintf("%v", verson["name_clean"]))
+	players, ok := result["players"].(map[string]interface{})
+	if !ok {
+		errorColor.Println("Failed to parse players information")
+		return
+	}
+	printKeyValue("Players", fmt.Sprintf("%v/%v", players["online"], players["max"]))
+	motd, ok := result["motd"].(map[string]interface{})
+	if !ok {
+		errorColor.Println("Failed to parse motd information")
+		return
+	}
+	printKeyValue("MOTD", fmt.Sprintf("%v", motd["clean"]))
+
+}
 func runMasscan(ipAddress string) {
 	titleColor.Println("Running masscan...")
 	cmd := exec.Command("masscan", ipAddress, "--rate", "1000", "-p0-65535")
